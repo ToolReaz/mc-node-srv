@@ -4,6 +4,7 @@
   "description": "NodeJS implementation of Minecraft server",
   "main": "src/main.js",
   "scripts": {
+    "start:dev": "nodemon .",
     "test": "jest"
   },
   "repository": {
@@ -25,6 +26,7 @@
   },
   "homepage": "https://github.com/ToolReaz/mc-node-srv#readme",
   "devDependencies": {
-    "jest": "^27.0.6"
+    "jest": "^27.0.6",
+    "nodemon": "^2.0.12"
   }
 }
