@@ -1,4 +1,4 @@
-const { readVarInt, writeVarInt } = require("../src/datatypes");
+const { readVarInt, writeVarInt } = require("../src/datatypes/varint");
 
 describe("Datatypes tests", () => {
   test("Test VarInt decoding", () => {

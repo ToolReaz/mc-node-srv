@@ -1,5 +1,5 @@
-const net = require("net");
-const { readVarInt, writeString, writeVarInt } = require("./datatypes");
+const { readVarInt, writeVarInt } = require("./datatypes/varint");
+const { writeString } = require("./datatypes/string");
 
 const server = net.createServer();
 
