@@ -43,7 +43,7 @@ function writeVarInt(value) {
     values.push(currentByte);
   } while (value != 0);
 
-  return Buffer.from(values)
+  return Buffer.from(values);
 }
 
 /**
@@ -52,6 +52,8 @@ function writeVarInt(value) {
  * @returns
  */
 function writeString(string) {
-  let stringBuffer = Buffer.from(string);
-  return buffer;
+  let stringBuffer = Buffer.from(string, "utf-8");
+  let lengthBuffer = writeVarInt(stringBuffer.length);
+
+  return Buffer.concat([lengthBuffer, stringBuffer]);
 }

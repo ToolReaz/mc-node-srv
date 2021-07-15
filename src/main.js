@@ -1,5 +1,5 @@
 const net = require("net");
-const { readVarInt } = require("./datatypes");
+const { readVarInt, writeString, writeVarInt } = require("./datatypes");
 
 const server = net.createServer();
 
@@ -17,12 +17,17 @@ server.on("connection", (socket) => {
       if (length > 1) {
         console.log("handshake");
 
-        const [protocol, remain] = readVarInt(payload)
-        console.log("Protocol version: " + protocol)
+        const [protocol, remain] = readVarInt(payload);
+        console.log("Protocol version: " + protocol);
 
-        const res = Buffer.from([0x00, json]);
-        const res2 = Buffer.concat([Buffer.from([res.length]), res]);
-        socket.write(res2);
+        const res = Buffer.concat([
+          Buffer.from([0x00]),
+          writeString(JSON.stringify(json)),
+        ]);
+
+        const packet = Buffer.concat([writeVarInt(res.length), res]);
+
+        socket.write(packet);
       }
     }
 
@@ -33,7 +38,7 @@ server.on("connection", (socket) => {
 const json = {
   version: {
     name: "1.17.1",
-    protocol: 755,
+    protocol: 756,
   },
   players: {
     max: 42,
