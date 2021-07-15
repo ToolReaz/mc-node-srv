@@ -1,3 +1,5 @@
+const { writeVarInt } = require("./varint");
+
 module.exports = {
   writeString,
 };
