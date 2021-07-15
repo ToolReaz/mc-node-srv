@@ -1,0 +1,30 @@
+{
+  "name": "mc-node-srv",
+  "version": "0.0.1",
+  "description": "NodeJS implementation of Minecraft server",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ToolReaz/mc-node-srv.git"
+  },
+  "keywords": [
+    "NodeJS",
+    "node",
+    "minecraft",
+    "server",
+    "srv",
+    "mc"
+  ],
+  "author": "ToolReaz",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/ToolReaz/mc-node-srv/issues"
+  },
+  "homepage": "https://github.com/ToolReaz/mc-node-srv#readme",
+  "devDependencies": {
+    "jest": "^27.0.6"
+  }
+}
