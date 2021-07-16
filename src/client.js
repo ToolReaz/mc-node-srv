@@ -1,5 +1,6 @@
 const { readVarInt } = require("./datatypes/varint");
 const handshake = require("./protocol/handshake");
+const ping = require("./protocol/ping");
 
 class Client {
   /**
@@ -19,6 +20,9 @@ class Client {
       switch (packetID) {
         case 0x00:
           handshake(payload, this.socket);
+          break;
+        case 0x01:
+          ping(payload, this.socket);
           break;
         default:
           console.warn(
