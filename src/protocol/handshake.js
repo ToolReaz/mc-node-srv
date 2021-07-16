@@ -5,77 +5,25 @@ const crypto = require("crypto");
 
 module.exports = handshake;
 
-let userState = null;
+function handshake(socket, payload) {
+  console.log("handshake");
+  const [protocol, a] = readVarInt(payload);
+  const [address, b] = readString(a);
+  const port = Buffer.from(b.slice(0, 2)).readInt16BE();
+  const [nextState, c] = readVarInt(b.slice(2));
 
-function handshake(packetID, payload, socket) {
-  if (packetID === 0x00) {
-    const [protocol, a] = readVarInt(payload);
-    const [address, b] = readString(a);
-    const port = Buffer.from(b.slice(0, 2)).readInt16BE();
-    const [state, c] = readVarInt(b.slice(2));
+  console.log(protocol, address, port, nextState);
 
-    //console.log(protocol, address, port, state);
+  const res = Buffer.concat([
+    Buffer.from([0x00]),
+    writeString(JSON.stringify(json)),
+  ]);
 
-    // STATUS
-    if (state === 1) {
-      const res = Buffer.concat([
-        Buffer.from([0x00]),
-        writeString(JSON.stringify(json)),
-      ]);
+  const resPacket = Buffer.concat([writeVarInt(res.length), res]);
 
-      const resPacket = Buffer.concat([writeVarInt(res.length), res]);
+  socket.write(resPacket);
 
-      socket.write(resPacket);
-      return;
-    }
-
-    // LOGIN
-    if (state === 2) {
-      const [username] = readString(c);
-      console.log(username + " try to connect...");
-
-      userState = "login";
-
-      const rsaKey = new NodeRSA({ b: 1024 });
-
-      const verifyToken = crypto.randomBytes(4).toString("hex");
-
-      let pubKeyFormated = "";
-      rsaKey
-        .exportKey("pkcs8-public-pem")
-        .split("\n")
-        .forEach((line) => {
-          pubKeyFormated += line;
-        });
-      const pubKeyBuffer = Buffer.from(pubKeyFormated, "base64");
-
-      // Help: https://github.com/PrismarineJS/node-minecraft-protocol/blob/master/src/server/login.js
-      // TODO: figure out if key length is number of key's bytes (1024) or the buffer's length
-      const res = Buffer.from([
-        0x01,
-        writeString(serverId),
-        writeVarInt(1024),
-        pubKeyBuffer,
-        Buffer.from([verifyToken.length]),
-        Buffer.from([verifyToken]),
-      ]);
-
-      const resSocket = Buffer.concat([Buffer.from([res.length]), res]);
-      socket.write(resSocket);
-    }
-  } else if (packetID === 0x01) {
-    if (userState === "login") {
-      const [sharedSecretLength, a] = readVarInt(payload);
-      const sharedSecret = a.slice(0, sharedSecretLength);
-      const [verifyTokenLength, b] = readVarInt(a.slice(sharedSecretLength));
-      const verifyToken = b.slice(0, verifyTokenLength);
-    } else {
-      // Ping
-      const res = Buffer.concat([Buffer.from([0x01]), payload]);
-      const resSocket = Buffer.concat([Buffer.from([res.length]), res]);
-      socket.write(resSocket);
-    }
-  }
+  return nextState;
 }
 
 const serverId = "azertazertazertazert";
