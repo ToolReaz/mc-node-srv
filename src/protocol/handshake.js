@@ -82,8 +82,8 @@ const serverId = "azertazertazertazert";
 
 const json = {
   version: {
-    name: "1.17.1",
-    protocol: 756,
+    name: "2.31.4",
+    protocol: 123,
   },
   players: {
     max: 0,
