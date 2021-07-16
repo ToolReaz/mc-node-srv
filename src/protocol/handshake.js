@@ -82,19 +82,13 @@ const serverId = "azertazertazertazert";
 
 const json = {
   version: {
-    name: "2.31.4",
-    protocol: 123,
+    name: "1.17.1",
+    protocol: 756,
   },
   players: {
-    max: 0,
-    online: 999999999,
-    sample: [
-      {
-        name: "crizyx",
-        id: "687462bb-270e-4bff-9ec6-c5d4e6a5fc2a",
-      },
-      { name: "ToolReaz", id: "f0fef56d-c6ee-4d8a-96be-90e820ef2ab4" },
-    ],
+    max: 999,
+    online: 0,
+    sample: [],
   },
   description: {
     text: "Hello world !",
