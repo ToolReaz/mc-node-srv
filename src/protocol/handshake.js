@@ -1,20 +1,33 @@
 const { readVarInt, writeVarInt } = require("../datatypes/varint");
-const { writeString } = require("../datatypes/string");
+const { writeString, readString } = require("../datatypes/string");
 
 module.exports = handshake;
 
 function handshake(payload, socket) {
-  const [protocol, remain] = readVarInt(payload);
-  console.log("Protocol version: " + protocol);
+  const [protocol, a] = readVarInt(payload);
+  const [address, b] = readString(a);
+  const port = Buffer.from(b.slice(0, 2)).readInt16BE();
+  const [state, c] = readVarInt(b.slice(2));
 
-  const res = Buffer.concat([
-    Buffer.from([0x00]),
-    writeString(JSON.stringify(json)),
-  ]);
+  //console.log(protocol, address, port, state);
 
-  const resPacket = Buffer.concat([writeVarInt(res.length), res]);
+  // STATUS
+  if (state === 1) {
+    const res = Buffer.concat([
+      Buffer.from([0x00]),
+      writeString(JSON.stringify(json)),
+    ]);
 
-  socket.write(resPacket);
+    const resPacket = Buffer.concat([writeVarInt(res.length), res]);
+
+    socket.write(resPacket);
+    return;
+  }
+
+  // LOGIN
+  if (state === 2) {
+    const [username] = readString(c);
+  }
 }
 
 const json = {
