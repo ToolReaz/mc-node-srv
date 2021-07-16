@@ -63,13 +63,12 @@ function handshake(packetID, payload, socket) {
       const resSocket = Buffer.concat([Buffer.from([res.length]), res]);
       socket.write(resSocket);
     }
-  } else if (state === 0x01) {
+  } else if (packetID === 0x01) {
     if (userState === "login") {
-      const [sharedSecretLength, a] = readVarInt(payload)
-      const sharedSecret = a.slice(0, sharedSecretLength)
-      const [verifyTokenLength, b] = readVarInt(a.slice(sharedSecretLength))
-      const verifyToken = b.slice(0, verifyTokenLength)
-      
+      const [sharedSecretLength, a] = readVarInt(payload);
+      const sharedSecret = a.slice(0, sharedSecretLength);
+      const [verifyTokenLength, b] = readVarInt(a.slice(sharedSecretLength));
+      const verifyToken = b.slice(0, verifyTokenLength);
     } else {
       // Ping
       const res = Buffer.concat([Buffer.from([0x01]), payload]);
@@ -89,7 +88,13 @@ const json = {
   players: {
     max: 42,
     online: 0,
-    sample: [],
+    sample: [
+      {
+        name: "crizyx",
+        id: "687462bb-270e-4bff-9ec6-c5d4e6a5fc2a",
+      },
+      { name: "ToolReaz", id: "f0fef56d-c6ee-4d8a-96be-90e820ef2ab4" },
+    ],
   },
   description: {
     text: "Hello world !",

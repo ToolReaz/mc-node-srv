@@ -14,16 +14,40 @@ class Client {
     this.state = states.HANDSHAKING;
   }
 
-  set state(state) {
-    this.state = state;
-  }
-
   register() {
     this.socket.on("data", (data) => {
       const [length, remain] = readVarInt(data);
       const [packetID, payload] = readVarInt(remain);
 
       handshake(packetID, payload, this.socket, this.state);
+
+      if (this.state === states.HANDSHAKING) {
+        switch (packetID) {
+          case 0x00:
+            handshake(payload, this.socket);
+            break;
+          case 0x01:
+            ping(payload, this.socket);
+            break;
+          default:
+            console.warn("Unhandled packet ID !");
+        }
+      }
+
+      if (this.state === states.LOGIN) {
+        switch (packetID) {
+          case 0x00:
+            login(payload, this.socket);
+            break;
+          case 0x01:
+            ping(payload, this.socket);
+            break;
+          default:
+            console.warn("Unhandled packet ID !");
+        }
+      }
+
+
 
       /*
       switch (packetID) {
