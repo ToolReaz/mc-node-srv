@@ -86,8 +86,8 @@ const json = {
     protocol: 756,
   },
   players: {
-    max: 42,
-    online: 0,
+    max: 0,
+    online: 999999999,
     sample: [
       {
         name: "crizyx",
