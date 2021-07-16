@@ -1,6 +1,7 @@
 const { readVarInt } = require("./datatypes/varint");
 const handshake = require("./protocol/handshake");
 const ping = require("./protocol/ping");
+const states = require("./states");
 
 class Client {
   /**
@@ -10,6 +11,11 @@ class Client {
   constructor(id, socket) {
     this.id = id;
     this.socket = socket;
+    this.state = states.HANDSHAKING;
+  }
+
+  set state(state) {
+    this.state = state;
   }
 
   register() {
@@ -17,18 +23,22 @@ class Client {
       const [length, remain] = readVarInt(data);
       const [packetID, payload] = readVarInt(remain);
 
+      handshake(packetID, payload, this.socket, this.state);
+
+      /*
       switch (packetID) {
         case 0x00:
           handshake(payload, this.socket);
           break;
         case 0x01:
-          ping(payload, this.socket);
+          handshake(payload, this.socket);
           break;
         default:
           console.warn(
             `Received a packet with ID ${packetID} which is currently not implemented !`
           );
       }
+      */
     });
   }
 }
